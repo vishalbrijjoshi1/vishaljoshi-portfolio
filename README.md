@@ -40,9 +40,9 @@ I help startups and companies automate deployments, optimize cloud infra, and de
 ---
 
 ## 📬 Connect With Me
-- 🌐 [LinkedIn](https://www.linkedin.com/in/yourprofile)  
-- 📧 vijoshi@example.com  
-- 🖥️ [GitHub](https://github.com/yourusername)  
+- 🌐 ](https://www.linkedin.com/in/inquisitive-intellect-523700354/)  
+- 📧 [https://vljoshi63.wixsite.com/inquisitiveintellect)
+- 🖥️ [GitHub](https://github.com/vishaljoshi-portfollio)  
 
 ---
 ⭐️ *Available for Freelance Projects — CI/CD, Cloud, and MLOps setups*
