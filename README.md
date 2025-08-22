@@ -9,7 +9,7 @@ I help startups and companies automate deployments, optimize cloud infra, and de
 - **DevOps:** Docker, Kubernetes, Jenkins, GitHub Actions, Terraform  
 - **Cloud:** AWS, GCP, Azure  
 - **MLOps:** ML model deployment, CI/CD for ML, monitoring, MLflow  
-- **Programming:** Python, Shell Scripting  
+- **Programming:** Python, Shell Scripting, Anaconda Env.  
 
 ---
 
