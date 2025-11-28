@@ -40,7 +40,7 @@ I help startups and companies automate deployments, optimize cloud infra, and de
 ---
 
 ## 📬 Connect With Me
-- 🌐 ](https://www.linkedin.com/in/inquisitive-intellect-523700354/)  
+- 🌐 (https://www.linkedin.com/in/vishal-joshi-71aa82148/))  
 - 📧 [https://vljoshi63.wixsite.com/inquisitiveintellect)
 - 🖥️ [GitHub](https://github.com/vishaljoshi-portfollio)  
 
