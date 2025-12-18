@@ -23,9 +23,9 @@ I help startups and companies automate deployments, optimize cloud infra, and de
 
 ---
 
-### 2️⃣ Dockerized ML Model  
-- Containerized a Scikit-Learn model for prediction  
-- Exposed via FastAPI + Docker Compose  
+### 2️⃣ Deploy LLAMA Model on local Infrastructure
+- It is Chat bot and learn from different Documents of any official organization and Answering user's queries.  
+- Easily handling the client and saving the men power to operate manuly. 
 - [🔗 View GitHub Repo](https://github.com/yourusername/docker-ml-model)  
 - ![ML Screenshot](assets/ml-docker.png)  
 
