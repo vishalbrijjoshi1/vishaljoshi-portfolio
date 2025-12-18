@@ -15,11 +15,10 @@ I help startups and companies automate deployments, optimize cloud infra, and de
 
 ## 📂 Projects Showcase
 
-### 1️⃣ CI/CD Pipeline with Jenkins + GitHub Actions  
-- Automated build, test, and deploy for a sample app  
-- Reduced deployment time by 60%  
-- [🔗 View GitHub Repo](https://github.com/yourusername/devops-ci-cd)  
-- ![CI/CD Screenshot](assets/cicd.png)  
+### 1️⃣ Automation & Python Software  
+- Report Dashboard application for monthly report of Engineer's Task and incedents they handled in last month.  
+- Reduced Creation time by 90%  
+- [🔗 Report Dashboard Applicatio][(https://github.com/vishalbrijjoshi1/vishaljoshi-portfolio/wiki/Report-Dashboard))]
 
 ---
 
