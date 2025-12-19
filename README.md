@@ -18,13 +18,14 @@ I help startups and companies automate deployments, optimize cloud infra, and de
 ### 1️⃣ Automation & Python Software  
 - Report Dashboard application for monthly report of Engineer's Task and incedents they handled in last month.  
 - Reduced Creation time by 90%  
-- [🔗 Report Dashboard Applicatio][(https://github.com/vishalbrijjoshi1/vishaljoshi-portfolio/wiki/Report-Dashboard))]
+- [🔗 Report Dashboard Documentation][(https://github.com/vishalbrijjoshi1/vishaljoshi-portfolio/wiki/Report-Dashboard)]
+- [🔗 Report Dashboard Code ][(https://github.com/vishalbrijjoshi1/vishaljoshi-portfolio/tree/main/Report_Dashboard)]
 
 ---
 
-### 2️⃣ Dockerized ML Model  
-- Containerized a Scikit-Learn model for prediction  
-- Exposed via FastAPI + Docker Compose  
+### 2️⃣ Deploy LLAMA Model on local Infrastructure for SOP Chatbot.
+- It is Chat bot and learn from different Documents of any official organization and Answering user's queries.  
+- Easily handling the client and saving the men power to operate manuly. 
 - [🔗 View GitHub Repo](https://github.com/yourusername/docker-ml-model)  
 - ![ML Screenshot](assets/ml-docker.png)  
 
@@ -41,7 +42,7 @@ I help startups and companies automate deployments, optimize cloud infra, and de
 ## 📬 Connect With Me
 - 🌐 (https://www.linkedin.com/in/vishal-joshi-71aa82148/))  
 - 📧 [https://vljoshi63.wixsite.com/inquisitiveintellect)
-- 🖥️ [GitHub](https://github.com/vishaljoshi-portfollio)  
+- 🖥️ [GitHub](https://github.com/vishalbrijjoshi1)  
 
 ---
 ⭐️ *Available for Freelance Projects — CI/CD, Cloud, and MLOps setups*
