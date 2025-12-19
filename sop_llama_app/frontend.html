@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SOP LLaMA Chatbot</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --primary: #21808d;
+            --primary-hover: #1a6871;
+            --bg: #f5f7fa;
+            --surface: #ffffff;
+            --border: #dde1e6;
+            --text: #111827;
+            --muted: #6b7280;
+            --error: #b91c1c;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .page {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+
+        header {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid var(--border);
+        }
+
+        header h1 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .pill {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            color: var(--muted);
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 16px;
+        }
+
+        .card {
+            background: var(--surface);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            padding: 16px;
+        }
+
+        .auth-card {
+            max-width: 420px;
+            margin: 60px auto;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 8px 0;
+            border-radius: 999px;
+            cursor: pointer;
+            font-size: 14px;
+            border: 1px solid transparent;
+        }
+
+        .tab.active {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .tab:not(.active) {
+            border-color: var(--border);
+            color: var(--muted);
+        }
+
+        .field {
+            margin-bottom: 12px;
+        }
+
+        .field label {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+
+        .field input, .field textarea {
+            width: 100%;
+            padding: 8px 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .field textarea {
+            resize: none;
+            min-height: 40px;
+            max-height: 120px;
+        }
+
+        .field input:focus, .field textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .btn {
+            border: none;
+            border-radius: 999px;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: var(--text);
+        }
+
+        .btn-small {
+            padding: 6px 10px;
+            font-size: 12px;
+        }
+
+        .btn[disabled] {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .alert {
+            font-size: 13px;
+            padding: 8px 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        .alert-success {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        .sidebar-item {
+            padding: 8px 10px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .sidebar-item.active {
+            background: #e0f2fe;
+            color: #075985;
+        }
+
+        .sidebar-item span {
+            font-size: 16px;
+        }
+
+        .chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .chat-window {
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: #f9fafb;
+            height: calc(100vh - 230px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 12px;
+            overflow-y: auto;
+            font-size: 14px;
+        }
+
+        .msg {
+            display: flex;
+            margin-bottom: 8px;
+            gap: 8px;
+        }
+
+        .msg.user { flex-direction: row-reverse; }
+
+        .avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 999px;
+            background: #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .avatar.user { background: var(--primary); color: #fff; }
+
+        .bubble {
+            max-width: 80%;
+            padding: 8px 10px;
+            border-radius: 10px;
+            line-height: 1.4;
+        }
+
+        .bubble.user {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .bubble.bot {
+            background: #e5e7eb;
+        }
+
+        .bubble.error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .chat-input {
+            border-top: 1px solid var(--border);
+            padding: 8px;
+            background: #fff;
+            display: flex;
+            gap: 8px;
+        }
+
+        .typing {
+            font-size: 12px;
+            color: var(--muted);
+            margin-bottom: 4px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 8px;
+            margin-top: 8px;
+            font-size: 13px;
+        }
+
+        .stat {
+            padding: 8px 10px;
+            border-radius: 8px;
+            background: #f9fafb;
+            border: 1px solid var(--border);
+        }
+
+        .stat-label { color: var(--muted); font-size: 12px; }
+        .stat-value { font-weight: 600; margin-top: 2px; }
+
+        .history-item {
+            padding: 8px;
+            border-radius: 8px;
+            background: #f9fafb;
+            border: 1px solid var(--border);
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+
+        @media (max-width: 768px) {
+            .layout { grid-template-columns: 1fr; }
+            .chat-window { height: calc(100vh - 260px); }
+        }
+    </style>
+</head>
+<body>
+<div id="authView" class="page">
+    <div class="card auth-card">
+        <div class="card-title">Sign in to SOP LLaMA Chatbot</div>
+        <div class="tabs">
+            <div class="tab active" data-mode="login" onclick="switchAuthMode('login', event)">Login</div>
+            <div class="tab" data-mode="register" onclick="switchAuthMode('register', event)">Register</div>
+        </div>
+        <div id="authAlert"></div>
+        <div class="field">
+            <label>Username</label>
+            <input id="authUsername" type="text" autocomplete="username">
+        </div>
+        <div class="field">
+            <label>Password</label>
+            <input id="authPassword" type="password" autocomplete="current-password">
+        </div>
+        <div class="field" id="authEmailField" style="display:none;">
+            <label>Email (optional)</label>
+            <input id="authEmail" type="email">
+        </div>
+        <button id="authSubmit" class="btn btn-primary" onclick="handleAuth()">Continue</button>
+    </div>
+</div>
+
+<div id="appView" class="page" style="display:none;">
+    <header>
+        <div>
+            <h1>🤖 SOP LLaMA Chatbot</h1>
+            <div class="pill">Local LLaMA + Chroma + SOP RAG</div>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+            <span id="userLabel" style="font-size:13px; color:var(--muted);"></span>
+            <button class="btn btn-secondary btn-small" onclick="logout()">Logout</button>
+        </div>
+    </header>
+
+    <div class="layout">
+        <div class="card">
+            <div class="card-title">Menu</div>
+            <div class="sidebar-item active" data-section="chat" onclick="switchSection('chat', event)">
+                <span>💬</span> <span>Chat</span>
+            </div>
+            <div class="sidebar-item" data-section="stats" onclick="switchSection('stats', event)">
+                <span>📊</span> <span>System status</span>
+            </div>
+            <div class="sidebar-item" data-section="history" onclick="switchSection('history', event)">
+                <span>📜</span> <span>Conversation history</span>
+            </div>
+            <div class="sidebar-item" onclick="reloadDocs()">
+                <span>🔄</span> <span>Reload SOP documents</span>
+            </div>
+        </div>
+
+        <div class="card" id="chatSection">
+            <div class="chat-header">
+                <div class="card-title">Chat</div>
+                <button class="btn btn-secondary btn-small" onclick="clearHistory()">Clear chat</button>
+            </div>
+            <div id="chatWindow" class="chat-window">
+                <div id="chatMessages" class="chat-messages">
+                    <div class="msg bot">
+                        <div class="avatar">AI</div>
+                        <div class="bubble bot">
+                            Hello! Ask anything about your SOP documents. If it is not in the SOPs, I will say so.
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-input">
+                    <textarea id="chatInput" placeholder="Ask a question about SOP documents..." onkeydown="handleInputKey(event)"></textarea>
+                    <button id="sendBtn" class="btn btn-primary" onclick="sendMessage()">Send</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" id="statsSection" style="display:none;">
+            <div class="card-title">System status</div>
+            <div id="statsAlert" style="font-size:13px; margin-bottom:6px;"></div>
+            <button class="btn btn-secondary btn-small" onclick="loadStats()">Refresh</button>
+            <div class="stats-grid" id="statsGrid"></div>
+        </div>
+
+        <div class="card" id="historySection" style="display:none;">
+            <div class="card-title">Conversation history</div>
+            <div id="historyList"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+const API_BASE_URL = 'http://localhost:5000';
+
+let authMode = 'login';
+let token = localStorage.getItem('sop_token') || null;
+let username = localStorage.getItem('sop_user') || null;
+let sending = false;
+
+function switchAuthMode(mode, ev) {
+    authMode = mode;
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    if (ev && ev.target) ev.target.classList.add('active');
+    else document.querySelector(`.tab[data-mode="${mode}"]`).classList.add('active');
+
+    document.getElementById('authEmailField').style.display = mode === 'register' ? 'block' : 'none';
+    document.getElementById('authSubmit').textContent = mode === 'register' ? 'Register' : 'Login';
+    setAuthAlert('');
+}
+
+function setAuthAlert(msg, type='') {
+    const el = document.getElementById('authAlert');
+    if (!msg) { el.innerHTML = ''; return; }
+    const cls = type === 'error' ? 'alert alert-error' :
+                type === 'success' ? 'alert alert-success' : 'alert';
+    el.innerHTML = `<div class="${cls}">${msg}</div>`;
+}
+
+async function handleAuth() {
+    const u = document.getElementById('authUsername').value.trim();
+    const p = document.getElementById('authPassword').value.trim();
+    const e = document.getElementById('authEmail').value.trim();
+
+    if (!u || !p) {
+        setAuthAlert('Username and password are required.', 'error');
+        return;
+    }
+
+    const endpoint = authMode === 'login' ? '/api/login' : '/api/register';
+    const body = authMode === 'login'
+        ? { username: u, password: p }
+        : { username: u, password: p, email: e };
+
+    try {
+        const res = await fetch(API_BASE_URL + endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+            setAuthAlert(data.error || 'Request failed', 'error');
+            return;
+        }
+        if (authMode === 'register') {
+            setAuthAlert('Registration successful, please login.', 'success');
+            switchAuthMode('login');
+        } else {
+            token = data.access_token;
+            username = data.username;
+            localStorage.setItem('sop_token', token);
+            localStorage.setItem('sop_user', username);
+            initApp();
+        }
+    } catch (err) {
+        setAuthAlert('Cannot reach backend. Is it running?', 'error');
+    }
+}
+
+function initApp() {
+    if (token && username) {
+        document.getElementById('authView').style.display = 'none';
+        document.getElementById('appView').style.display = 'block';
+        document.getElementById('userLabel').textContent = username;
+        loadStats();
+        loadHistory();
+    } else {
+        document.getElementById('authView').style.display = 'block';
+        document.getElementById('appView').style.display = 'none';
+    }
+}
+
+function logout() {
+    token = null;
+    username = null;
+    localStorage.removeItem('sop_token');
+    localStorage.removeItem('sop_user');
+    location.reload();
+}
+
+function switchSection(section, ev) {
+    document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+    if (ev && ev.target.closest('.sidebar-item')) {
+        ev.target.closest('.sidebar-item').classList.add('active');
+    } else {
+        document.querySelector(`.sidebar-item[data-section="${section}"]`)?.classList.add('active');
+    }
+
+    document.getElementById('chatSection').style.display = section === 'chat' ? 'block' : 'none';
+    document.getElementById('statsSection').style.display = section === 'stats' ? 'block' : 'none';
+    document.getElementById('historySection').style.display = section === 'history' ? 'block' : 'none';
+
+    if (section === 'stats') loadStats();
+    if (section === 'history') loadHistory();
+}
+
+function appendMessage(text, sender='bot', isError=false) {
+    const box = document.getElementById('chatMessages');
+    const msg = document.createElement('div');
+    msg.className = 'msg ' + (sender === 'user' ? 'user' : 'bot');
+    const avatar = document.createElement('div');
+    avatar.className = 'avatar ' + (sender === 'user' ? 'user' : '');
+    avatar.textContent = sender === 'user' ? (username ? username[0].toUpperCase() : 'U') : 'AI';
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble ' + (sender === 'user' ? 'user' : (isError ? 'error' : 'bot'));
+    bubble.textContent = text;
+    msg.appendChild(avatar);
+    msg.appendChild(bubble);
+    box.appendChild(msg);
+    box.scrollTop = box.scrollHeight;
+}
+
+function setTyping(on) {
+    let el = document.getElementById('typingRow');
+    if (on) {
+        if (!el) {
+            el = document.createElement('div');
+            el.id = 'typingRow';
+            el.className = 'typing';
+            el.textContent = 'AI is thinking...';
+            document.getElementById('chatMessages').appendChild(el);
+        }
+    } else if (el) {
+        el.remove();
+    }
+}
+
+async function sendMessage() {
+    if (sending) return;
+    const input = document.getElementById('chatInput');
+    const q = input.value.trim();
+    if (!q) return;
+
+    sending = true;
+    input.value = '';
+    input.disabled = true;
+    document.getElementById('sendBtn').disabled = true;
+
+    appendMessage(q, 'user');
+    setTyping(true);
+
+    try {
+        const res = await fetch(API_BASE_URL + '/api/query', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify({ question: q }),
+        });
+        const data = await res.json();
+        setTyping(false);
+        if (!res.ok) {
+            appendMessage(data.error || 'Error from backend', 'bot', true);
+        } else {
+            appendMessage(data.answer || '(empty answer)', 'bot');
+        }
+    } catch (err) {
+        setTyping(false);
+        appendMessage('Network error. Check backend server.', 'bot', true);
+    } finally {
+        sending = false;
+        input.disabled = false;
+        document.getElementById('sendBtn').disabled = false;
+        input.focus();
+    }
+}
+
+function handleInputKey(ev) {
+    if (ev.key === 'Enter' && !ev.shiftKey) {
+        ev.preventDefault();
+        sendMessage();
+    }
+}
+
+async function loadStats() {
+    const grid = document.getElementById('statsGrid');
+    const alert = document.getElementById('statsAlert');
+    grid.innerHTML = '';
+    alert.textContent = '';
+
+    try {
+        const [hRes, sRes] = await Promise.all([
+            fetch(API_BASE_URL + '/api/health'),
+            fetch(API_BASE_URL + '/api/documents/stats', {
+                headers: { 'Authorization': 'Bearer ' + token }
+            })
+        ]);
+        const health = await hRes.json();
+        const stats = await sRes.json();
+
+        const items = [
+            { label: 'Model loaded', value: health.model_loaded ? 'Yes' : 'No' },
+            { label: 'Embeddings loaded', value: health.embeddings_loaded ? 'Yes' : 'No' },
+            { label: 'Docs loaded', value: health.documents_loaded ? 'Yes' : 'No' },
+            { label: 'Doc chunks', value: stats.total_chunks || 0 },
+            { label: 'Total users (session)', value: health.total_users || 0 },
+        ];
+
+        items.forEach(i => {
+            const d = document.createElement('div');
+            d.className = 'stat';
+            d.innerHTML = `<div class="stat-label">${i.label}</div><div class="stat-value">${i.value}</div>`;
+            grid.appendChild(d);
+        });
+
+        if (!health.documents_loaded) {
+            alert.textContent = 'Documents are not loaded. Use "Reload SOP documents" after adding files.';
+        }
+    } catch (err) {
+        alert.textContent = 'Failed to load system status.';
+    }
+}
+
+async function loadHistory() {
+    const box = document.getElementById('historyList');
+    box.innerHTML = '';
+    try {
+        const res = await fetch(API_BASE_URL + '/api/conversation/history', {
+            headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const data = await res.json();
+        const hist = data.history || [];
+        if (!hist.length) {
+            box.textContent = 'No conversation yet.';
+            return;
+        }
+        hist.forEach((h, idx) => {
+            const d = document.createElement('div');
+            d.className = 'history-item';
+            d.innerHTML = `
+                <div><strong>Q${idx+1}:</strong> ${h.question}</div>
+                <div><strong>A${idx+1}:</strong> ${h.answer}</div>
+            `;
+            box.appendChild(d);
+        });
+    } catch (err) {
+        box.textContent = 'Failed to load history.';
+    }
+}
+
+async function clearHistory() {
+    if (!confirm('Clear conversation history?')) return;
+    try {
+        const res = await fetch(API_BASE_URL + '/api/conversation/clear', {
+            method: 'POST',
+            headers: { 'Authorization': 'Bearer ' + token }
+        });
+        if (res.ok) {
+            document.getElementById('chatMessages').innerHTML = '';
+            appendMessage('History cleared. You can start a new conversation.', 'bot');
+            loadHistory();
+        }
+    } catch (err) {
+        alert('Failed to clear history.');
+    }
+}
+
+async function reloadDocs() {
+    if (!confirm('Reload all SOP documents now?')) return;
+    try {
+        const res = await fetch(API_BASE_URL + '/api/reload-documents', {
+            method: 'POST',
+            headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const data = await res.json();
+        if (res.ok) {
+            alert('Documents reloaded successfully.');
+            loadStats();
+        } else {
+            alert('Error: ' + (data.error || 'reload failed'));
+        }
+    } catch (err) {
+        alert('Failed to call reload-documents.');
+    }
+}
+
+if (token && username) initApp();
+else switchAuthMode('login');
+</script>
+</body>
+</html>
