@@ -26,8 +26,8 @@ I help startups and companies automate deployments, optimize cloud infra, and de
 ### 2️⃣ Deploy LLAMA Model on local Infrastructure for SOP Chatbot.
 - It is Chat bot and learn from different Documents of any official organization and Answering user's queries.  
 - Easily handling the client and saving the men power to operate manuly. 
-- [🔗 View GitHub Repo](https://github.com/yourusername/docker-ml-model)  
-- ![ML Screenshot](assets/ml-docker.png)  
+- [🔗 View GitHub Repo](https://github.com/vishalbrijjoshi1/vishaljoshi-portfolio/tree/main/sop_llama_app)  
+- ![Quick-Start-Guide](https://github.com/vishalbrijjoshi1/vishaljoshi-portfolio/wiki/SOP-LLaMA-Chatbot-%E2%80%90-Quick-Start-Guide)  
 
 ---
 
