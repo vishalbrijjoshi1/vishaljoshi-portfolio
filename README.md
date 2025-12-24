@@ -18,8 +18,8 @@ I help startups and companies automate deployments, optimize cloud infra, and de
 ### 1️⃣ Automation & Python Software  
 - Report Dashboard application for monthly report of Engineer's Task and incedents they handled in last month.  
 - Reduced Creation time by 90%  
-- [🔗 Report Dashboard Documentation][(https://github.com/vishalbrijjoshi1/vishaljoshi-portfolio/wiki/Report-Dashboard)]
-- [🔗 Report Dashboard Code ][(https://github.com/vishalbrijjoshi1/vishaljoshi-portfolio/tree/main/Report_Dashboard)]
+- [🔗 Report Dashboard Documentation](https://github.com/vishalbrijjoshi1/vishaljoshi-portfolio/wiki/Report-Dashboard)
+- [🔗 Report Dashboard Code ](https://github.com/vishalbrijjoshi1/vishaljoshi-portfolio/tree/main/Report_Dashboard)
 
 ---
 
