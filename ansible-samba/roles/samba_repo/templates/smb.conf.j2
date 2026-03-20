@@ -1,0 +1,27 @@
+[global]
+   workgroup = WORKGROUP
+   security = user
+   map to guest = Bad User
+   log file = /var/log/samba/log.%m
+   max log size = 50
+
+{% for repo in repos %}
+[{{ repo.name }}]
+   comment = {{ repo.name }} Repository
+   path = {{ samba.base_path }}/{{ repo.name }}
+   writeable = yes
+   browsable = no
+
+   valid users = {% for a in repo.access.admins %}@{{ repo.name }}_admin {% endfor %}
+   {% if repo.access.users is defined %}
+   {% for u in repo.access.users %}@{{ repo.name }}_user {% endfor %}
+   {% endif %}
+   {% if repo.access.extra_users is defined %}
+   {% for u in repo.access.extra_users %}{{ u }} {% endfor %}
+   {% endif %}
+
+   create mask = 0775
+   directory mask = 0775
+
+   veto files = /*.mp3/*.wav/*.wma/*.pst/*.tmp/*.log/
+{% endfor %}

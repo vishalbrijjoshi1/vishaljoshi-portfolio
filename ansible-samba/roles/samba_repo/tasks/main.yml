@@ -1,0 +1,105 @@
+- name: Install Samba
+  apt:
+    name: samba
+    state: present
+    update_cache: yes
+
+# ---------------- GROUPS ----------------
+- name: Create admin groups
+  group:
+    name: "{{ item.name }}_admin"
+    state: present
+  loop: "{{ repos }}"
+
+- name: Create user groups
+  group:
+    name: "{{ item.name }}_user"
+    state: present
+  loop: "{{ repos }}"
+
+# ---------------- USERS ----------------
+- name: Create admin users
+  user:
+    name: "{{ item.1 }}"
+    groups: "{{ item.0.name }}_admin"
+    append: yes
+    state: present
+  loop: "{{ repos | subelements('access.admins') }}"
+
+- name: Create normal users
+  user:
+    name: "{{ item.1 }}"
+    groups: "{{ item.0.name }}_user"
+    append: yes
+    state: present
+  when: item.0.access.users is defined
+  loop: "{{ repos | subelements('access.users', skip_missing=True) }}"
+
+- name: Create extra users (no group)
+  user:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ repos | selectattr('access.extra_users','defined') | map(attribute='access.extra_users') | flatten }}"
+  when: repos | selectattr('access.extra_users','defined') | list | length > 0
+
+# ---------------- DIRECTORIES ----------------
+- name: Create base directory
+  file:
+    path: "{{ samba.base_path }}"
+    state: directory
+    mode: '0775'
+
+- name: Create repo directories
+  file:
+    path: "{{ samba.base_path }}/{{ item.name }}"
+    state: directory
+    owner: root
+    group: "{{ item.name }}_admin"
+    mode: '0775'
+  loop: "{{ repos }}"
+
+# ---------------- OPTIONAL TEMP FOLDER ----------------
+- name: Create temp folder (RW)
+  file:
+    path: "{{ samba.base_path }}/{{ item.name }}/temp"
+    state: directory
+    mode: '0777'
+  loop: "{{ repos }}"
+
+# ---------------- SAMBA CONFIG ----------------
+- name: Backup smb.conf
+  copy:
+    src: /etc/samba/smb.conf
+    dest: /etc/samba/smb.conf.bkp
+    remote_src: yes
+    force: no
+
+- name: Deploy smb.conf
+  template:
+    src: smb.conf.j2
+    dest: /etc/samba/smb.conf
+  notify: restart samba
+
+# ---------------- SAMBA PASSWORD ----------------
+- name: Set samba password for admin users
+  shell: |
+    (echo "{{ samba.default_password }}"; echo "{{ samba.default_password }}") | smbpasswd -s -a {{ item }}
+  loop: "{{ repos | map(attribute='access.admins') | flatten }}"
+  args:
+    executable: /bin/bash
+
+- name: Set samba password for normal users
+  shell: |
+    (echo "{{ samba.default_password }}"; echo "{{ samba.default_password }}") | smbpasswd -s -a {{ item }}
+  loop: "{{ repos | map(attribute='access.users') | flatten }}"
+  when: repos | map(attribute='access.users') | list | length > 0
+  args:
+    executable: /bin/bash
+
+- name: Set samba password for extra users
+  shell: |
+    (echo "{{ samba.default_password }}"; echo "{{ samba.default_password }}") | smbpasswd -s -a {{ item }}
+  loop: "{{ repos | selectattr('access.extra_users','defined') | map(attribute='access.extra_users') | flatten }}"
+  when: repos | selectattr('access.extra_users','defined') | list | length > 0
+  args:
+    executable: /bin/bash

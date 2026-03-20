@@ -1,0 +1,26 @@
+samba:
+  base_path: /project_shared
+  default_password: Password@123
+
+repos:
+  - name: projectA
+    access:
+      admins:
+        - admin1
+      users:
+        - user1
+        - user2
+
+  - name: projectB
+    access:
+      admins:
+        - admin2
+
+  - name: projectC
+    access:
+      admins:
+        - admin3
+      users:
+        - user3
+      extra_users:
+        - external1

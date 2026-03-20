@@ -1,0 +1,6 @@
+- name: Setup Samba Repo System
+  hosts: repo_servers
+  become: yes
+
+  roles:
+    - samba_repo
