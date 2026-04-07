@@ -1,0 +1,28 @@
+[5:51 PM] Mithlesh Sharma
+qat-gui
+
+Unable to open the file /home/user/.qat/preferences.json. An empty preference file will be created.
+
+Could not load testSettings.json, using default values.
+
+Starting Python TCP server on port 54409
+
+Application started with PID 2318907
+
+Loading injector
+
+Could not find QtCore library
+
+Waiting for Qt libraries to be loaded before injecting server
+
+Libraries loaded in 500 ms
+
+Loading injector
+
+Could not find QtCore library
+
+Error reading pid file [Errno 2] No such file or directory: '/tmp/qat-2318907.txt'
+
+Stopping Python TCP server
+
+Stopping Python TCP server
