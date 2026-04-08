@@ -2,7 +2,9 @@
 🚀 DevOps & MLOps Engineer | CI/CD | Cloud | Kubernetes | AI Deployment  
 
 I help startups and companies automate deployments, optimize cloud infra, and deploy machine learning models seamlessly.  
-# 👋 AI_Learning
+# 👋 AI_Learning : If you want to learn AI from zero, You should have to learn from here : AI_Learning/Practicals
+      In this repo you have found practicals and other projects which are mentioned in syllabus.
+      Wiki URL : 
 ---
 
 ## 🔧 Skills
